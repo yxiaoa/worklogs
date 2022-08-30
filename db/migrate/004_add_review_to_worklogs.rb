@@ -1,5 +1,5 @@
 #encoding: utf-8
-class AddReviewToWorklogs < ActiveRecord::Migration
+class AddReviewToWorklogs < Rails.version < '5.1' ? ActiveRecord::Migration : ActiveRecord::Migration[5.2]
   def up
     create_table :worklog_reviews, :force => true do |t|
       t.column :worklog_id, :integer, :default => 0, :null => false
@@ -14,6 +14,6 @@ class AddReviewToWorklogs < ActiveRecord::Migration
   end
 
   def down
-  	remove_table :worklog_reviews
+  	drop_table :worklog_reviews
   end
 end

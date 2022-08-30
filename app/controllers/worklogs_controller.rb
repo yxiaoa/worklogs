@@ -5,12 +5,12 @@ class WorklogsController < ApplicationController
 
   # before_filter :authorize, :only => [:index,:my,:new]
   
-  before_filter :find_model_object, :except => [:index, :new, :create,:my,:preview]
-  before_filter :init_slider,:only => [:index, :my, :new, :edit, :show]
+  before_action :find_model_object, :except => [:index, :new, :create,:my,:preview]
+  before_action :init_slider,:only => [:index, :my, :new, :edit, :show]
   
   
   def init_slider
-    @last=Worklog.find(:first,:order =>"created_at asc").created_at.to_date if Worklog.count > 0
+    @last=Worklog.order("created_at asc").first.created_at.to_date if Worklog.count > 0
     @last ||= Date.today
     # @last = Date.new(@start_topic.year,@start_topic.mon,1)
     @start=Date.today
@@ -38,11 +38,12 @@ class WorklogsController < ApplicationController
     # @worklogs = worklogs_scope.all#.limit(@limit)
     
     @worklogs_count = worklogs_scope.count
-    @worklogs_pages = Paginator.new @worklogs_count, @limit, params['page']
+    @worklogs_pages = Paginator.new @worklogs_count, 20, @limit, params['page']
     @offset ||= @worklogs_pages.offset
-    @worklogs = worklogs_scope.all(    :order => "#{Worklog.table_name}.created_at DESC",
-                                       :offset => @offset,
-                                       :limit => @limit)
+    #@worklogs = worklogs_scope.all(    :order => "#{Worklog.table_name}.created_at DESC",
+    #                                   :offset => @offset,
+    #                                   :limit => @limit)
+    @worklogs = worklogs_scope.all
   end
   
 
@@ -129,6 +130,7 @@ class WorklogsController < ApplicationController
   end
   
   def create
+    params.permit!
     @worklog = Worklog.new(params[:worklog])
     @worklog.day = Date.today
     @worklog.week = Date.today.strftime("%W").to_i

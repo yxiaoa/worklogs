@@ -8,7 +8,7 @@ class WorklogReview < ActiveRecord::Base
 
   after_create :delive_review
 
-  SCORES = {"A（超出预期）" => 1,"B（完成）" => 2,"C（未完成或者结果不达标）" => 3}
+  SCORES = {"A(超出预期)" => 1,"B(完成)" => 2,"C(未完成或者结果不达标)" => 3}
 
   #邮件通知
   def delive_review
@@ -25,11 +25,11 @@ class WorklogReview < ActiveRecord::Base
   def like_text
   	case score
   	when 1
-  		return "A（超出预期）"
+  		return "A(超出预期)"
   	when 2
-  		return "B（完成）"
+  		return "B(完成)"
   	when 3
-  		return "C（未完成或者结果不达标）"
+  		return "C(未完成或者结果不达标)"
   	end
   end
 

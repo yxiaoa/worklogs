@@ -1,5 +1,5 @@
 #encoding: utf-8
-class CreateWorklogs < ActiveRecord::Migration
+class CreateWorklogs < Rails.version < '5.1' ? ActiveRecord::Migration : ActiveRecord::Migration[5.2]
   def change
     create_table :worklogs do |t|
       t.integer :user_id
