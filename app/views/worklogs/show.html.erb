@@ -3,77 +3,13 @@
 
 <p class="author"><%= authoring @worklog.created_at, @worklog.author %> </p>
 
-<div class="wiki">
-	
-	<table width="100%">
-		<tr>
-			<td width="30%"><%="#{l(:index_item_plan)}"%></td>
-			<td width="40%"><%="#{l(:index_item_done)}"%></td>
-			<td width="30%"><%="#{l(:index_item_next_todo)}"%></td>
-		</tr>
-		<tr>
-			<td><%= textilizable(@worklog.plan.try(:todo)) %></td>
-			<td><%= textilizable(@worklog.do) %></td>
-			<td><%= textilizable(@worklog.todo) %></td>
-		</tr>
-		<%unless textilizable(@worklog.feel).blank?%>
-		<tr>
-			<td COLSPAN=3 BGCOLOR="#eee">
-				<%=textilizable("#{l(:label_feel)} "+@worklog.feel) %>
-			</td>
-		</tr>
-		<%end%>
-	</table>
-
-
-	<%if (@worklog.typee > 0  &&  !@worklog.score.blank?) %>
-	<table width="100%">
-		<tr>
-			<td COLSPAN=2 BGCOLOR="#eee">
- 				<%=l(:index_item_score)%>: <%=score_text @worklog.score%> （<%=l(:index_item_good)%> | <%=l(:index_item_nogood)%>）
- 			</td>
-		</tr>
-		<tr>
-			<td><%= textilizable(@worklog.good) %></td>
-			<td><%= textilizable(@worklog.nogood) %></td>
-		</tr>
-	</table>
-	<%end%>
-
+<div class="contextual">
+  <%= link_to "", {:action => 'edit', :id => @worklog.id}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) if can_edit?(@worklog) %>
+  <%= link_to "", worklog_path(@worklog), :class => 'icon icon-del', method: :delete, data: {confirm: "Are you sure?"}, :accesskey => accesskey(:destroy) if can_edit?(@worklog) %>
 </div>
 
-<h3>Leader评价</h3>
-<div class="box"> 
-	<%@worklog_reviews.each do |cl|%>
-		<fieldset>
-		<legend><%=cl.user.name%>：<%=cl.like_text%> （<%=cl.created_at%>）</legend>
-		<%=textilizable cl.review%>
-		</fieldset>
-	<%end%>
-</div>
-
-<div class="box tabular"> 
-<fieldset>
-<legend>Leader评价</legend>
-
-<%= labelled_form_for @worklog_review, :url => review_worklog_path(:id=>@worklog.id), :html => { :id => 'worklog_review-form' } do |f| %>
-	
-	<p>
-	<%= f.select(:score, WorklogReview.scores_collection, :class=>'wiki-edit',:required => true,:label => :field_worklog_score)%> 
-	</p>
-	 	<p>
-	<%= f.text_area :review, :required => true, :label => :field_worklog_review,:cols => 40, :rows => 10, :class => 'wiki-edit' %>
-	<em class="info">
-		我的反馈意见.
-	</em>
-</p>
-	 <%= submit_tag l(:button_create) %>
-<% end %>
-</fieldset>
-</div>
-
-
+<%= render partial: "weeklog", object: @worklog %>
 
 <% content_for :sidebar do %>
-	<%=render :partial => "sidebar" %>
+  <%=render :partial => "sidebar" %>
 <% end %>

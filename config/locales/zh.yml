@@ -86,3 +86,12 @@ zh:
   index_item_plan: 计划
   index_item_done: 执行
   index_item_next_todo: 新的计划
+  index_item_project: 项目
+  index_item_responsible: 负责人
+  index_item_task: 任务描述
+  index_item_start: 开始时间
+  index_item_due: 预计完成
+  index_item_log: 本周工作
+  index_item_schedule: 进度/下周计划
+  index_item_bottleneck: 瓶颈
+  title_worklog: "工作日志"

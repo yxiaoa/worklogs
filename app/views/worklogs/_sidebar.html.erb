@@ -3,53 +3,43 @@
 <fieldset id="filters" class="collapsible">
   <legend onclick="toggleFieldset(this);"><%= l(:sidebar_by_typee) %></legend>
 <div style="">
-	<%=link_to "ALL",{:controller=>"worklogs",:action=>"index",:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
-	<%=link_to "Day",{:controller=>"worklogs",:action=>"index",:typee=>0,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
-	<%=link_to "Week",{:controller=>"worklogs",:action=>"index",:typee=>1,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
-	<%=link_to "Month",{:controller=>"worklogs",:action=>"index",:typee=>2,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
-	<%=link_to "Year",{:controller=>"worklogs",:action=>"index",:typee=>3,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
+        <%=link_to "ALL",{:controller=>"worklogs",:action=>"index",:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
+        <%=link_to "Day",{:controller=>"worklogs",:action=>"index",:typee=>0,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
+        <%=link_to "Week",{:controller=>"worklogs",:action=>"index",:typee=>1,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
+        <%=link_to "Month",{:controller=>"worklogs",:action=>"index",:typee=>2,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
+        <%=link_to "Year",{:controller=>"worklogs",:action=>"index",:typee=>3,:day=>params[:day],:user_id=>params[:user_id]},{} %><br />
 </div>
 </fieldset>
 <!-- 
 <fieldset id="filters" class="collapsible">
   <legend onclick="toggleFieldset(this);"><%= l(:sidebar_by_day) %></legend>
   <div style="">
-	<%=link_to "ALL",{:controller=>"worklogs",:action=>"index",:user_id=>params[:user_id],:typee=>params[:typee]},{} %><br />
-	<% @start.step(@last,-7) do |archive| 
-	year = archive.strftime("%Y")	
-	week = archive.strftime("%W") -%>	
-	<%=link_to "#{year}年#{week}周",{:controller=>"worklogs",:action=>"index",:week=>week,:user_id=>params[:user_id],:typee=>params[:typee]},{} %><br />
-	<% end %>
+        <%=link_to "ALL",{:controller=>"worklogs",:action=>"index",:user_id=>params[:user_id],:typee=>params[:typee]},{} %><br />
+        <% @start.step(@last,-7) do |archive| 
+        year = archive.strftime("%Y")	
+        week = archive.strftime("%W") -%>	
+        <%=link_to "#{year}年#{week}周",{:controller=>"worklogs",:action=>"index",:week=>week,:user_id=>params[:user_id],:typee=>params[:typee]},{} %><br />
+        <% end %>
   </div>
 </fieldset> -->
 
 <fieldset id="filters" class="collapsible">
   <legend onclick="toggleFieldset(this);"><%= l(:sidebar_by_user) %></legend>
   <div style="">
-	<%=link_to "ALL",{:controller=>"worklogs",:action=>"index",:day=>params[:day],:typee=>params[:typee]},{} %><br />
-	<%@users.each do |user|%>
-		<%=link_to user.name(),{:controller=>"worklogs",:action=>"index",:user_id=>user.id,:day=>params[:day],:typee=>params[:typee]}%> <br />
-	<%end%>
+        <%=link_to "ALL",{:controller=>"worklogs",:action=>"index",:day=>params[:day],:typee=>params[:typee]},{} %><br />
+        <%@users.each do |user|%>
+                <%=link_to user.name(),{:controller=>"worklogs",:action=>"index",:user_id=>user.id,:day=>params[:day],:typee=>params[:typee]}%> <br />
+        <%end%>
   </div>
 </fieldset>
 
-
-
-
- 
-
-
-
-　<hr />
+<hr />
 <h3><%= l(:sidebar_about) %></h3>
-<%=textilizable (Setting.plugin_worklogs['WORKLOGS_ABOUT'] || "约定和说明,可定制").force_encoding("utf-8")%>
-
-
+<%=textilizable (Setting.plugin_worklogs['WORKLOGS_ABOUT'] || "TBD").force_encoding("utf-8")%>
 
 <br />
 <hr />
-<p>
 
-	<%=link_to "Worklogs","https://github.com/IceskYsl/worklogs" %>  is a plugin for <%=link_to "Redmine","http://www.redmine.org/" %>, developed by <%=link_to "Iceskysl@eoe","http://my.eoe.cn/iceskysl"%> 
-	
+<p>
+  <%=link_to "Worklogs","https://github.com/IceskYsl/worklogs" %>  is a plugin for <%=link_to "Redmine","http://www.redmine.org/" %>, developed by <%=link_to "Iceskysl@eoe","http://my.eoe.cn/iceskysl"%> 
 </p>

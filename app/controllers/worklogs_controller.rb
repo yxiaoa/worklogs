@@ -84,22 +84,21 @@ class WorklogsController < ApplicationController
     @month_todo = Worklog.where("user_id = ? and day <> ? and typee = ?", session[:user_id],Date.today,2).last
     @year_todo = Worklog.where("user_id = ? and day <> ? and typee = ?", session[:user_id],Date.today,3).last
     
-    # @wl = Worklog.where("user_id = ? and day = ?",session[:user_id],@day).first
-    # if @wl
-    #   redirect_to :action => 'edit',:id=> @wl.id
-    # else
-    #   @worklog = Worklog.new()      
-    # end
-    @worklog = Worklog.new()    
-    @worklog.typee = 1  
+    @worklog = Worklog.new()
+    @worklog.typee = 1
+    10.times do
+      @worklog.tasklogs.build
+    end
   end
-  
-  
+
   def edit
+    @worklog = Worklog.find(params[:id])
     @day = Date.today
     @day_todo = Worklog.where("user_id = ? and day <> ? and typee = ?", session[:user_id],Date.today,0).last
     @week_todo = Worklog.where("user_id = ? and day <> ? and typee = ?", session[:user_id],Date.today,1).last
-
+    10.times do
+      @worklog.tasklogs.build
+    end
   end
 
   def show
@@ -119,19 +118,25 @@ class WorklogsController < ApplicationController
   end
 
   def update
-    # @worklog.safe_attributes = params[:worklog]
-    @worklog.update_attributes(params[:worklog])
-    if request.put? and @worklog.save
+    @worklog = Worklog.find(params[:id])
+
+    if @worklog.update(worklog_params)
       flash[:notice] = l(:notice_successful_update)
-      redirect_to worklogs_path()
+      redirect_to @worklog
     else
-      render :action => 'edit',:id=>@worklog.id
+      render :action => 'edit',:id => @worklog.id
     end
   end
-  
+
+  def destroy
+    @worklog = Worklog.find(params[:id])
+    @worklog.destroy
+
+    redirect_to worklogs_path()
+  end
+
   def create
-    params.permit!
-    @worklog = Worklog.new(params[:worklog])
+    @worklog = Worklog.new(worklog_params)
     @worklog.day = Date.today
     @worklog.week = Date.today.strftime("%W").to_i
     @worklog.month = Date.today.strftime("%m").to_i
@@ -141,8 +146,11 @@ class WorklogsController < ApplicationController
       redirect_to worklogs_path()
     else
     end
-    
   end
 
-
+  private
+  def worklog_params
+    params.require(:worklog).permit(:user_id, :typee, :day, :week, :month, :year, 
+      tasklogs_attributes: [:id, :project, :responsible, :task_description, :start, :due, :task_log, :schedule, :bottleneck, :_destroy])
+  end
 end

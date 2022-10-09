@@ -85,3 +85,12 @@ en:
   index_item_plan: Plan
   index_item_done: Do
   index_item_next_todo: Todo
+  index_item_project: Project
+  index_item_responsible: Responsible
+  index_item_task: "Task description"
+  index_item_start: "Start date"
+  index_item_due: "Due date"
+  index_item_log: "Week log"
+  index_item_schedule: "Schedule/Plan"
+  index_item_bottleneck: Bottleneck
+  title_worklog: "Work log"

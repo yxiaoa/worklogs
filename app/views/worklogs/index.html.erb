@@ -1,81 +1,29 @@
 <%=render :partial => "nav" %>
- 
-	
+
 <h2><%=worklogs_title(params[:typee])%></h2>
-<%@worklogs.each do |w|%>
-<h3>
-	<%= avatar(w.author, :size => "18")%> 
-	<%=worklogs_index_title(w.typee)%>:
-	<%=h w.day %>
-	(第<%=DateTime.parse(w.day).strftime('%W').to_s%>周 - <%=DateTime.parse(w.day).strftime('%A').to_s%>)
 
-</h3>
-<div class="contextual">
-<%=link_to "", {:action => 'edit', :id => w.id}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) if can_edit?(w)%>
-<%=link_to "详情&评价",worklog_path(:id=>w.id)%>
-</div>
+<% @worklogs.each do |w| %>
+  <h3>
+    <%= avatar(w.author, :size => "18")%> 
+    <%=worklogs_index_title(w.typee)%>:
+    <%=h w.day %>
+    (第<%=DateTime.parse(w.day).strftime('%W').to_s%>周 - <%=DateTime.parse(w.day).strftime('%A').to_s%>)
+  </h3>
 
+  <div class="contextual">
+    <%=link_to "", {:action => 'edit', :id => w.id}, :class => 'icon icon-edit', :accesskey => accesskey(:edit) if can_edit?(w)%>
+    <%=link_to "详情",worklog_path(:id=>w.id)%>
+  </div>
 
-<p class="author"><%= authoring w.created_at, w.author %> </p>
+  <p class="author"><%= authoring w.created_at, w.author %> </p>
 
+  <%= render partial: "weeklog", object: w %>
+<% end %>
 
-<div class="wiki">
-	
-	<table width="100%">
-		<tr>
-			<td width="30%"><%="#{l(:index_item_plan)}"%></td>
-			<td width="40%"><%="#{l(:index_item_done)}"%></td>
-			<td width="30%"><%="#{l(:index_item_next_todo)}"%></td>
-		</tr>
-		<tr>
-			<td><%= textilizable(w.plan.try(:todo)) %></td>
-			<td><%= textilizable(w.do) %></td>
-			<td><%= textilizable(w.todo) %></td>
-		</tr>
-		<%unless textilizable(w.feel).blank?%>
-		<tr>
-			<td COLSPAN=3 BGCOLOR="#eee">
-				<%=textilizable("#{l(:label_feel)} "+w.feel) %>
-			</td>
-		</tr>
-		<%end%>
-	</table>
-	
-	<%if (w.typee > 0  &&  !w.score.blank?) %>
-	<table width="100%">
-		<tr>
-			<td COLSPAN=2 BGCOLOR="#eee">
- 				<%=l(:index_item_score)%>: <%=score_text w.score%> （<%=l(:index_item_good)%> | <%=l(:index_item_nogood)%>）
- 			</td>
-		</tr>
-		<tr>
-			<td><%= textilizable(w.good) %></td>
-			<td><%= textilizable(w.nogood) %></td>
-		</tr>
-	</table>
-	<%end%>
-
-	<%if (w.worklog_reviews) %>
-	<table width="100%">
-		<%w.worklog_reviews.each do |wr|%>
-		<tr>
-			<td BGCOLOR="#eee">Leader评价: <%=score_text wr.score%> , <%= authoring wr.created_at, wr.user %></td>
-		</tr>
-		<tr>
-			<td><%= textilizable(wr.review) %></td>
-		</tr>
-		<%end%>
-	</table>
-	<%end%>
-
-	
-</div>
-<%end%>
 <p class="pagination"><%= pagination_links_full @worklogs_pages %></p>
 
 <% content_for :sidebar do %>
-	<%=render :partial => "sidebar" %>
+  <%=render :partial => "sidebar" %>
 <% end %>
- 
 
 <% html_title "#{l(:label_worklog)}" %>

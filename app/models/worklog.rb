@@ -5,11 +5,14 @@ class Worklog < ActiveRecord::Base
   unloadable
   belongs_to :author, :class_name => "User", :foreign_key => "user_id"
   has_many :worklog_reviews
-  
+  has_many :tasklogs, autosave: true, :dependent => :destroy
+  accepts_nested_attributes_for :tasklogs, allow_destroy: true
+
+  validates_associated :tasklogs
+
   attr_accessor :plan,:plan_done,:week_feel
   
   TYPEE = {"day" => 0,"week" => 1, "month" => 2, "year" => 3}
-  #SCORE = {"1分（最差）" => 1, "2分" => 2, "3分" => 3, "4分" => 4, "5分" => 5, "6分（及格）" => 6, "7分" => 7, "8分" => 8, "9分" => 9, "10分（最好）" => 10}
   SCORE = {"A: 超出预期" => 1, "B: 完成" => 2, "C: 未完成或结果不达标" => 3}
 
   def plan
@@ -62,6 +65,14 @@ class Worklog < ActiveRecord::Base
       w.week = week
       w.save
     end
-    
   end
+
+  def tasklogs_attributes=(tasklogs_attributes)
+    tasklogs_attributes.each do |i, tasklog_attributes|
+      if tasklog_attributes[:task_description].length > 0
+        self.tasklogs.build(tasklog_attributes)
+      end
+    end
+  end
+
 end

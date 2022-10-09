@@ -2,8 +2,7 @@
 
 <h2><%= l(:label_worklog_new) %></h2>
 
-
-<%= labelled_form_for @worklog, :url => worklogs_path, :html => { :id => 'worklog-form' } do |f| %>
+<%= form_with model: @worklog do |f| %>
   <%= render :partial => 'form', :locals => {:f => f} %>
   <%= submit_tag l(:button_create) %>
   <%= preview_news_url preview_worklogs_path(), 'worklog-form' %>

@@ -6,106 +6,34 @@
 <p><%= f.select(:typee, Worklog.typee_collection, {:class=>'wiki-edit',:required => true}, :onchange=>"hiddenScore(this.value)")%> </p>
 </div>
 
-
-<div class="worklog_todo"> 
-<fieldset>
-<legend>Plan Todo</legend>
-<div class="worklog_item" id="todo_day" style="display:<%=(@worklog && @worklog.typee == 0) ? 'block' : 'none'%>;padding-left:180px;">
-	<h4><%=l(:index_item_next_day_plan_todo)%></h4>
-	<%if @day_todo && !@day_todo.todo.blank?%>
-		<%= textilizable(@day_todo.todo) %>
-	<%else%>
-		<%=l(:text_no_day_plan)%>
-	<%end%>
-</div>
-
-<div class="worklog_item" id="todo_week" style="display:<%=(@worklog && @worklog.typee == 1) ? 'block' : 'none'%>;padding-left:180px;">
-	<h4><%=l(:index_item_next_week_plan_todo)%></h4>
-	<%if @week_todo && !@week_todo.todo.blank?%>
-		<%= textilizable(@week_todo.todo) %>
-	<%else%>
-		<%=l(:text_no_week_plan)%>
-	<%end%>
-</div>
-
-<div class="worklog_item" id="todo_month" style="display:<%=(@worklog && @worklog.typee == 2) ? 'block' : 'none'%>;padding-left:180px;">
-	<h4><%=l(:index_item_next_month_plan_todo)%></h4>
-	<%if @month_todo && !@month_todo.todo.blank?%>
-		<%= textilizable(@month_todo.todo) %>
-	<%else%>
-		<%=l(:text_no_month_plan)%>
-	<%end%>
-</div>
-
-<div class="worklog_item" id="todo_year" style="display:<%=(@worklog && @worklog.typee == 3) ? 'block' : 'none'%>;padding-left:180px;">
-	<h4><%=l(:index_item_next_year_plan_todo)%></h4>
-	<%if @year_todo && !@year_todo.todo.blank?%>
-		<%= textilizable(@year_todo.todo) %>
-	<%else%>
-		<%=l(:text_no_year_plan)%>
-	<%end%>
-</div>
-
-</fieldset>
-</div>
-<br />
-
-
- 
-
 <div class="box tabular" id="week" style="display:<%=(@worklog && @worklog.typee == 0) ? 'none' : 'block'%>;"> 
-	<fieldset>
-		<legend>工作日志</legend>
+  <fieldset>
+    <legend><%= l(:title_worklog) %></legend>
 
-		
-		<p><%= f.text_area :do, :required => true, :cols => 40, :value => "#{@worklog.do || l(:text_plan_done)}",:rows => 15, :class => 'wiki-edit' %></p>
-		<p><%= f.text_area :todo, :required => true, :cols => 40, :value => "#{@worklog.todo || l(:text_plan)}",:rows => 10, :class => 'wiki-edit' %></p>
-		<p><%= f.text_area :feel, :required => false, :cols => 40, :rows => 5, :class => 'wiki-edit' %></p>
-	</fieldset>
+    <table width="100%">
+      <tr BGCOLOR="#eee">
+        <td width="10%"><%="#{l(:index_item_project)}"%></td>
+        <td width="10%"><%="#{l(:index_item_responsible)}"%></td>
+        <td width="20%"><%="#{l(:index_item_task)}"%></td>
+        <td width="10%"><%="#{l(:index_item_start)}"%></td>
+        <td width="10%"><%="#{l(:index_item_due)}"%></td>
+        <td width="20%"><%="#{l(:index_item_log)}"%></td>
+        <td width="20%"><%="#{l(:index_item_schedule)}"%></td>
+        <td width="10%"><%="#{l(:index_item_bottleneck)}"%></td>
+      </tr>
+    <%= f.fields_for :tasklogs do |task| %>
+      <tr>
+        <td><%= task.text_area :project %></td>
+        <td><%= task.text_area :responsible %></td>
+        <td><%= task.text_area  :task_description %></td>
+        <td><%= task.date_field :start %></td>
+        <td><%= task.date_field :due %></td>
+        <td><%= task.text_area  :task_log %></td>
+        <td><%= task.text_area  :schedule %></td>
+        <td><%= task.text_area  :bottleneck %></td>
+      </tr>
+    <% end %>
+    </table>
 
-	<fieldset>
-		<legend>自我评价</legend>
-		<p><%= f.select(:score, Worklog.score_collection, {:class=>'wiki-edit',:required => true})%> </p>
-		<p><%= f.text_area :good, :required => false, :cols => 40, :rows => 5, :class => 'wiki-edit',:required => true %></p>
-		<p><%= f.text_area :nogood, :required => false, :cols => 40, :rows => 5, :class => 'wiki-edit',:required => true %></p>
-	</fieldset>
+  </fieldset>
 </div>
-
-
-
-<%= wikitoolbar_for 'worklog_do' %>
-<%= wikitoolbar_for 'worklog_plan_done' %>
-
-<script type="text/javascript">
-function hiddenScore(x)
-{
-	// alert(x)
-	var y=document.getElementById("week")
-	if (x == "0"){ //day
-		document.getElementById("todo_day").style.display = 'block';
-		document.getElementById("todo_week").style.display = 'none';
-		document.getElementById("todo_month").style.display = 'none';
-		document.getElementById("todo_year").style.display = 'none';
-	}else if(x == "1"){
-		document.getElementById("todo_day").style.display = 'none';
-		document.getElementById("todo_week").style.display = 'block';
-		document.getElementById("todo_month").style.display = 'none';
-		document.getElementById("todo_year").style.display = 'none';
-	}else if(x == "2"){
-		document.getElementById("todo_day").style.display = 'none';
-		document.getElementById("todo_week").style.display = 'none';
-		document.getElementById("todo_month").style.display = 'block';
-		document.getElementById("todo_year").style.display = 'none';
-	}else if(x == "3"){
-		document.getElementById("todo_day").style.display = 'none';
-		document.getElementById("todo_week").style.display = 'none';
-		document.getElementById("todo_month").style.display = 'none';
-		document.getElementById("todo_year").style.display = 'block';
-	}else{
-		document.getElementById("todo_day").style.display = 'block';
-		document.getElementById("todo_week").style.display = 'none';
-		document.getElementById("todo_month").style.display = 'none';
-		document.getElementById("todo_year").style.display = 'none';
-	}
-}
-</script>

@@ -9,4 +9,6 @@ get 'worklogs/review', :to => 'worklogs#review',:as => 'review_worklog'
 post 'worklogs/review', :to => 'worklogs#review',:as => 'review_worklogs'
 
 
-resources :worklogs
+resources :worklogs do
+  resources :tasklogs
+end
