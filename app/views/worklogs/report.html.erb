@@ -1,0 +1,46 @@
+<%= render :partial => "nav" %>
+
+<h2><%= worklogs_title(params[:typee]) %></h2>
+
+<% @weeklogs.each do |key, weeklog| %>
+  <h3>
+    (<%= key[0] %>年-第<%= key[1] %>周)
+  </h3>
+
+  <div class="wiki">
+    <table width="100%">
+      <tr BGCOLOR="#eee">
+        <td width="10%"><%="#{l(:index_item_project)}"%></td>
+        <td width="10%"><%="#{l(:index_item_responsible)}"%></td>
+        <td width="20%"><%="#{l(:index_item_task)}"%></td>
+        <td width="10%"><%="#{l(:index_item_start)}"%></td>
+        <td width="10%"><%="#{l(:index_item_due)}"%></td>
+        <td width="20%"><%="#{l(:index_item_log)}"%></td>
+        <td width="20%"><%="#{l(:index_item_schedule)}"%></td>
+        <td width="10%"><%="#{l(:index_item_bottleneck)}"%></td>
+      </tr>
+    <% weeklog.each do |worklog| %>
+      <% worklog.tasklogs.each do |task| %>
+        <tr>
+          <td><%= task.project %></td>
+          <td><%= task.responsible %></td>
+          <td><%= task.task_description %></td>
+          <td><%= task.start %></td>
+          <td><%= task.due %></td>
+          <td><%= task.task_log %></td>
+          <td><%= task.schedule %></td>
+          <td><%= task.bottleneck %></td>
+        </tr>
+      <% end %>
+    <% end %>
+    </table>
+  </div>
+<% end %>
+
+<p class="pagination"><%= pagination_links_full @worklogs_pages %></p>
+
+<% content_for :sidebar do %>
+  <%=render :partial => "sidebar" %>
+<% end %>
+
+<% html_title "#{l(:label_worklog)}" %>

@@ -5,8 +5,8 @@ class WorklogsController < ApplicationController
 
   # before_filter :authorize, :only => [:index,:my,:new]
   
-  before_action :find_model_object, :except => [:index, :new, :create,:my,:preview]
-  before_action :init_slider,:only => [:index, :my, :new, :edit, :show]
+  before_action :find_model_object, :except => [:index, :new, :create,:my,:preview, :report]
+  before_action :init_slider,:only => [:index, :my, :new, :edit, :show, :report]
   
   
   def init_slider
@@ -68,13 +68,39 @@ class WorklogsController < ApplicationController
     render :partial => 'preview'
   end
   
-
-  
   def my
     @user_id = session[:user_id]
     @week = params[:week]
     load_worklogs
     render :action => :index
+  end
+
+  def report
+    @user_id = params[:user_id]
+    @week = params[:week]
+    @typee = params[:typee]
+    worklogs_scope = Worklog.where("status = 0")
+    
+    if @user_id && @user_id.to_i > 0
+      worklogs_scope = worklogs_scope.where(:user_id => @user_id)
+    end
+    
+    unless @week.blank?
+      worklogs_scope = worklogs_scope.where(:week => @week)
+    end
+    
+    unless @typee.blank?
+      worklogs_scope = worklogs_scope.where(:typee => @typee)
+    end
+    
+    @weeklogs = worklogs_scope.group_by{|w| [w[:year], w[:week]]}.sort_by{|key, value| [-key[0], -key[1]]}
+
+    @limit =  Setting.plugin_worklogs['WORKLOGS_PAGINATION_LIMIT'].to_i || 20
+    
+    @worklogs_count = @weeklogs.count
+    @worklogs_pages = Paginator.new @worklogs_count, 20, @limit, params['page']
+    @offset ||= @worklogs_pages.offset
+    render :action => :report
   end
 
   def new
